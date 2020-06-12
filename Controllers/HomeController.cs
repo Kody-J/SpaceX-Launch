@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -46,19 +46,23 @@ namespace SpaceX_Launch.Controllers
 
                     for (var index = 0; index < responseJsonArray.Count; index++)
                     {
+                        //Date Parsing for sorting, coverting to CST, and seperting time
                         var launchDetail = new LaunchDetail();
                         var stringDateTime = responseJsonArray[index]["launch_date_utc"].ToString();
-                        
+
+                        //Convert JToken.Date to System.DateTime
                         var launchUtcDateTime = DateTime.Parse(stringDateTime);
                         var cst = TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time");
-
                         var launchCstDateTime = TimeZoneInfo.ConvertTimeFromUtc(launchUtcDateTime, cst);
-
                         var launchDateTime = launchCstDateTime.ToString();
-
                         var dateThenTime = launchDateTime.Split(' ');
                         launchDetail.LaunchDate = dateThenTime[0];
                         launchDetail.LaunchTime = dateThenTime[1] + " " + dateThenTime[2];
+
+                        //Split the dates and convert to Int32 for Sorting by date desc
+                        var seperateDate = dateThenTime[0].Split('/');
+                        launchDetail.DateForSort = ((Convert.ToInt32(seperateDate[2])*10000) + (Convert.ToInt32(seperateDate[0])*100) + Convert.ToInt32(seperateDate[1]));
+                       
                         launchDetail.RocketName = responseJsonArray[index]["rocket"]["rocket_name"].ToString();
 
                         if (responseJsonArray[index]["launch_success"].Type != JTokenType.Null)
@@ -75,7 +79,8 @@ namespace SpaceX_Launch.Controllers
 
                     payLoads.Sort();
                     payLoads.Reverse();
-
+                    //Sort Payloads in a seperate List and then reverse list
+                    //Iterate over reverse sorted payload list and reterive the LaunchDetail obj with matching payload and use index to express rank
                     for (var index = 0; index < payLoads.Count; index++)
                     {
                         for (var detailIndex = 0; detailIndex < launchDetails.Count; detailIndex++)
@@ -86,6 +91,8 @@ namespace SpaceX_Launch.Controllers
                             }
                         }
                     }
+                    //Sort launchDetails List by their date int value
+                    launchDetails.Sort((x, y) => x.DateForSort.CompareTo(y.DateForSort));
                 }
                 else
                 {
