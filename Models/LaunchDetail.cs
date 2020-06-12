@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
@@ -20,5 +20,6 @@ namespace SpaceX_Launch.Models
         public string LaunchStatus { get; set; }
         public int PayloadMass { get; set; }
         public int PayloadRank { get; set; }
+        public int DateForSort { get; set; }
     }
 }
