@@ -29,3 +29,5 @@ Future Iterations:
   3) Create a more interactive UI to allow the user to select any launch which has a lunch video and pull up that video in with a new        browser window
   4) Add additional Styling to improve the UI and incease quality of the user experience
 
+Only thing to note was converting UTC to CDT/CST was a little tricky in regards to figuring out the best method to do so.
+
